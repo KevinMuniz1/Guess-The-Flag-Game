@@ -98,8 +98,7 @@ struct ContentView: View {
     }
     
     func restart() {
-        countries.shuffle()
-        correctAnswer = Int.random(in: 0...2)
+        askQuestion()
         totalQuestionsAsked = 0
         score = 0
     }
