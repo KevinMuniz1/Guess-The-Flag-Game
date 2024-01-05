@@ -64,7 +64,7 @@ struct ContentView: View {
             .alert(titleName, isPresented: $finishedGame){
                 Button("Restart", action: restart)
             } message: {
-                Text("Your final score is \(score) / \(totalQuestionsAsked)")
+                Text("Your final score was \(score) / \(totalQuestionsAsked)")
             }
         }
     }
