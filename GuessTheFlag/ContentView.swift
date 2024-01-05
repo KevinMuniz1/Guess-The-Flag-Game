@@ -17,6 +17,7 @@ struct ContentView: View {
             LinearGradient(colors: [.indigo, .black], startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             VStack{
+                Spacer()
                 Text("Guess the Flag")
                     .font(.largeTitle.bold())
                     .foregroundStyle(.white)
@@ -48,6 +49,8 @@ struct ContentView: View {
                 Text("Score: ???")
                     .foregroundStyle(.white)
                     .font(.largeTitle.bold())
+                Spacer()
+                Spacer()
             }
             .alert(titleName, isPresented: $showScore){
                 Button("Ok, Next Question", action: askQuestion)
