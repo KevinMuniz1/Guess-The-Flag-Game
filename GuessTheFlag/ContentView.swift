@@ -14,16 +14,16 @@ struct ContentView: View {
     @State private var showScore = false
     var body: some View {
         ZStack{
-            Color.indigo
+            LinearGradient(colors: [.indigo, .black], startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             VStack(spacing: 30) {
                 VStack {
                     Text("Tap the flag of")
                         .foregroundStyle(.white)
-                        .font(.largeTitle)
+                        .font(.subheadline.weight(.heavy))
                     
                     Text(countries[correctAnswer])
-                        .font(.title)
+                        .font(.largeTitle.weight(.semibold))
                         .foregroundStyle(.white)
                 }
                 
@@ -32,11 +32,12 @@ struct ContentView: View {
                         displayTitleAndCheckAnswer(number)
                     } label: {
                         Image(countries[number])
-                    }
+                            .clipShape(.buttonBorder)
+                        .shadow(radius: 5)                    }
                 }
             }
         }.alert(titleName, isPresented: $showScore){
-            Button("Ok, Next Question", action: askQuestion)
+            Button("Ok, Next Question ", action: askQuestion)
         } message: {
             Text("Your score is ???")
         }
