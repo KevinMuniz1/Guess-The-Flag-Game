@@ -12,6 +12,9 @@ struct ContentView: View {
     @State private var correctAnswer = Int.random(in: 0...2)
     @State var titleName = ""
     @State private var showScore = false
+    @State private var score = 0
+    @State private var totalQuestionsAsked = 0
+    @State private var finishedGame = false
     var body: some View {
         ZStack{
             LinearGradient(colors: [.indigo, .black], startPoint: .top, endPoint: .bottom)
@@ -46,33 +49,61 @@ struct ContentView: View {
                     .background(.regularMaterial)
                     .clipShape(.rect(cornerRadius: 20))
                     .padding()
-                Text("Score: ???")
+                Text("Score: \(score) / 8")
                     .foregroundStyle(.white)
                     .font(.largeTitle.bold())
                 Spacer()
                 Spacer()
             }
+
             .alert(titleName, isPresented: $showScore){
                 Button("Ok, Next Question", action: askQuestion)
             } message: {
-                Text("Your score is ???")
+                Text("Your score is \(score) out of \(totalQuestionsAsked)")
+            }
+            .alert(titleName, isPresented: $finishedGame){
+                Button("Restart", action: restart)
+            } message: {
+                Text("Your final score is \(score) / \(totalQuestionsAsked)")
             }
         }
     }
     func displayTitleAndCheckAnswer(_ number: Int){
-        if number == correctAnswer{
-            titleName = "Correct"
-            showScore = true
-        } else {
-            titleName = "Wrong"
-            showScore = true
-        }
+            if number == correctAnswer{
+                titleName = "Correct"
+                score += 1
+                totalQuestionsAsked += 1
+                if totalQuestionsAsked == 8 {
+                    titleName = "That was correct and you have finished the game"
+                    finishedGame = true
+                } else {
+                    showScore = true
+                }
+            } else {
+                titleName = "Wrong! That is the flag of \(countries[number])"
+                totalQuestionsAsked += 1
+                if totalQuestionsAsked == 8 {
+                    titleName = "That was wrong and you have finished the game"
+                    finishedGame = true
+                } else {
+                    showScore = true
+                }
+            }
+
     }
     
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
+    
+    func restart() {
+        countries.shuffle()
+        correctAnswer = Int.random(in: 0...2)
+        totalQuestionsAsked = 0
+        score = 0
+    }
+    
 }
 
 #Preview {
