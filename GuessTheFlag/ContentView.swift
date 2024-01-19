@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct FlagView: View {
     let name: String
     var body: some View {
@@ -24,6 +25,7 @@ struct ContentView: View {
     @State private var score = 0
     @State private var totalQuestionsAsked = 0
     @State private var finishedGame = false
+    @State private var tappedFlag = -1
     var body: some View {
         ZStack{
             LinearGradient(colors: [.indigo, .black], startPoint: .top, endPoint: .bottom)
@@ -45,11 +47,17 @@ struct ContentView: View {
                     }
                     
                     ForEach(0..<3){ number in
-                        Button {
+                        Button() {
                             displayTitleAndCheckAnswer(number)
+
                         } label: {
                             FlagView(name: countries[number])
                         }
+                        .rotation3DEffect(
+                            .degrees(tappedFlag == number ? 360 : 0), axis: (x: 0, y: 1, z: 0)
+                        )
+                        .opacity(tappedFlag == -1 || tappedFlag == number ? 1 : 0.25)
+                        .animation(.default, value: tappedFlag)
                     }
                 }.frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
@@ -77,15 +85,18 @@ struct ContentView: View {
     }
     func displayTitleAndCheckAnswer(_ number: Int){
             if number == correctAnswer{
-                titleName = "Correct"
-                score += 1
-                totalQuestionsAsked += 1
-                if totalQuestionsAsked == 8 {
-                    titleName = "That was correct and you have finished the game"
-                    finishedGame = true
-                } else {
-                    showScore = true
-                }
+                    titleName = "Correct"
+                    score += 1
+                    totalQuestionsAsked += 1
+                    if totalQuestionsAsked == 8 {
+                        titleName = "That was correct and you have finished the game"
+                        finishedGame = true
+                    } else {
+                        showScore = true
+                    }
+                
+                tappedFlag = number
+                
             } else {
                 titleName = "Wrong! That is the flag of \(countries[number])"
                 totalQuestionsAsked += 1
@@ -102,6 +113,7 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        tappedFlag = -1
     }
     
     func restart() {
